@@ -26,33 +26,31 @@ fn and<A, B>(r: Result<A>, b: Result<B>) -> Result<(A, B)> {
 }
 
 pub fn first<R: BufRead>(inp: R) -> Result<String> {
-    find_n_most_cals(inp, 1)
+    find_n_most_cals::<R, 1>(inp)
 }
 
 pub fn second<R: BufRead>(inp: R) -> Result<String> {
-    find_n_most_cals(inp, 3)
+    find_n_most_cals::<R, 3>(inp)
 }
 
-pub fn find_n_most_cals<R: BufRead>(inp: R, n: usize) -> Result<String> {
-    let (max, curr) = inp.lines().map_ok(|e| e.trim().parse::<Line>()).flatten().fold(Ok((vec![], 0)), |agg, elem| {
+pub fn find_n_most_cals<R: BufRead, const N: usize>(inp: R) -> Result<String> {
+    let (max, curr) = inp.lines().map_ok(|e| e.trim().parse::<Line>()).flatten().fold(Ok(([0; N], 0)), |agg, elem| {
         and(agg, elem).map(|((max, curr), line)| {
             match line {
                 Line::Cal(cal) => (max, curr + cal),
                 Line::NewLine => {
-                    (fill_max(max, curr, n), 0)
+                    (fill_max(max, curr), 0)
                 }
             }
         })
     })?;
-    let res = fill_max(max, curr, n);
+    let res = fill_max(max, curr);
     Ok(format!("{}", res.into_iter().sum::<u32>()))
 }
 
-pub fn fill_max<T: Ord + Debug + Clone>(mut max: Vec<T>, curr: T, n: usize) -> Vec<T> {
-    if max.len() < n {
-        max.push(curr);
-    } else if let Some((idx, _)) = max.iter().enumerate().min_by(|(_, a), (_, b)| a.cmp(b)).filter(|(_, min)| &&curr > min) {
-        max[idx] = curr;
+pub fn fill_max<T: Ord + Debug + Clone, const N: usize>(mut res: [T; N], curr: T) -> [T; N] {
+    if let Some((idx, _)) = res.iter().enumerate().min_by(|(_, a), (_, b)| a.cmp(b)).filter(|(_, min)| &&curr > min) {
+        res[idx] = curr;
     }
-    max
+    res
 }
