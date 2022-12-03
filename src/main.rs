@@ -1,5 +1,5 @@
 use std::fs::File;
-use std::io::{BufReader};
+use std::io::{BufReader, Read};
 use anyhow::{anyhow, Result};
 use clap::Parser;
 
@@ -26,14 +26,18 @@ struct Args {
 fn main() -> Result<()> {
     let Args { year, day, prob, test } = Args::parse();
 
-    let f = get_input(&year, &day, test)?;
-    let inp = BufReader::new(f);
+    let mut f = get_input(&year, &day, test)?;
+
+    let mut s = String::new();
+    f.read_to_string(&mut s)?;
 
     let res = match (year.as_str(), day.as_str(), prob.as_str()) {
-        ("2022", "1", "1") => aoc2022::day1::first(inp),
-        ("2022", "1", "2") => aoc2022::day1::second(inp),
-        ("2022", "2", "1") => aoc2022::day2::first(inp),
-        ("2022", "2", "2") => aoc2022::day2::second(inp),
+        ("2022", "1", "1") => aoc2022::day1::first(BufReader::new(f)),
+        ("2022", "1", "2") => aoc2022::day1::second(BufReader::new(f)),
+        ("2022", "2", "1") => aoc2022::day2::first(BufReader::new(f)),
+        ("2022", "2", "2") => aoc2022::day2::second(BufReader::new(f)),
+        ("2022", "3", "1") => aoc2022::day3::first(&s),
+        ("2022", "3", "2") => aoc2022::day3::second(&s),
         _ => Err(anyhow!("not recognized year")),
     }?;
 
