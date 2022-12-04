@@ -25,32 +25,32 @@ pub fn exec(prob: &str, inp: &str) -> Result<String> {
 #[cfg(test)]
 mod test {
 
+    macro_rules! part_n_test {
+        ($part: ident, $day: ident, $inp: expr, $res:expr) => {
+            #[test]
+            fn $part() {
+                assert_eq!(
+                    exec(
+                        &format!(
+                            "{}-{}",
+                            stringify!($day).strip_prefix("day").unwrap(),
+                            stringify!($part).strip_prefix("part").unwrap()
+                        ),
+                        $inp
+                    )
+                    .unwrap(),
+                    $res
+                )
+            }
+        };
+    }
+
     macro_rules! aoc_tests {
         ($day:ident, $inp:expr, $first:expr, $second:expr) => {
             mod $day {
                 use crate::aoc2022::exec;
-                #[test]
-                fn part_1() {
-                    assert_eq!(
-                        exec(
-                            &format!("{}-1", stringify!($day).strip_prefix("day").unwrap()),
-                            $inp
-                        )
-                        .unwrap(),
-                        $first
-                    )
-                }
-                #[test]
-                fn part_2() {
-                    assert_eq!(
-                        exec(
-                            &format!("{}-2", stringify!($day).strip_prefix("day").unwrap()),
-                            $inp
-                        )
-                        .unwrap(),
-                        $second
-                    )
-                }
+                part_n_test! { part1, $day, $inp, $first }
+                part_n_test! { part2, $day, $inp, $second }
             }
         };
     }
