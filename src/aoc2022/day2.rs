@@ -1,9 +1,7 @@
-use std::io::BufRead;
-use std::str::FromStr;
-use anyhow::{anyhow, Result};
-use iter_tools::Itertools;
 use crate::aoc2022::day2::Outcome::{Draw, Loss, Win};
-use crate::utils::utils::and;
+use crate::utils::utils::non_empty_lines;
+use anyhow::{anyhow, Result};
+use std::str::FromStr;
 
 #[derive(Debug)]
 enum Outcome {
@@ -60,7 +58,7 @@ impl Choice {
     }
 
     fn game_outcome(&self, o: &Self) -> Outcome {
-        use Choice::{Rock, Paper, Scissors};
+        use Choice::{Paper, Rock, Scissors};
         match (self, o) {
             (Rock, Scissors) | (Scissors, Paper) | (Paper, Rock) => Win,
             (a, b) if a == b => Draw,
@@ -69,7 +67,7 @@ impl Choice {
     }
 
     fn opponent_play(&self, outcome: &Outcome) -> Self {
-        use Choice::{Rock, Paper, Scissors};
+        use Choice::{Paper, Rock, Scissors};
         match (self, outcome) {
             (a, Draw) => a.clone(),
             (Rock, Win) | (Paper, Loss) => Scissors,
@@ -113,7 +111,8 @@ impl FromStr for GameOutcome {
 }
 
 fn get_line(s: &str) -> Result<(&str, &str)> {
-    s.split_once(" ").ok_or_else(|| anyhow!("can't split game line: '{}'", s))
+    s.split_once(" ")
+        .ok_or_else(|| anyhow!("can't split game line: '{}'", s))
 }
 
 fn elf_play(s: &str) -> Result<Choice> {
@@ -145,42 +144,17 @@ pub trait Game {
     fn points(&self) -> u64;
 }
 
-pub fn second<R: BufRead>(inp: R) -> Result<String> {
-    run::<GameOutcome, R>(inp)
+pub fn second(inp: &str) -> Result<String> {
+    run::<GameOutcome>(inp)
 }
 
-pub fn first<R: BufRead>(inp: R) -> Result<String> {
-    run::<GameFirst, R>(inp)
+pub fn first(inp: &str) -> Result<String> {
+    run::<GameFirst>(inp)
 }
 
-fn run<G: Game + FromStr<Err=anyhow::Error>, R: BufRead>(inp: R) -> Result<String> {
-    let res = inp.lines().filter_ok(|l| !l.trim().is_empty()).map_ok(|g| G::from_str(g.trim())).flatten().fold(Ok(0), |sum, e| {
-        and(sum, e).map(|(sum, e)| sum + e.points())
-    })?;
+fn run<G: Game + FromStr<Err = anyhow::Error>>(inp: &str) -> Result<String> {
+    let res = non_empty_lines(inp)
+        .map(|g| G::from_str(g.trim()).unwrap())
+        .fold(0, |sum, e| sum + e.points());
     Ok(format!("{res}"))
-}
-
-#[cfg(test)]
-mod test {
-    use crate::aoc2022::day2::{first, second};
-
-    #[test]
-    fn prob_1_test() {
-        let res = first(r#"
-A Y
-B X
-C Z
-        "#.as_bytes()).unwrap();
-        assert_eq!(res, "15");
-    }
-
-    #[test]
-    fn prob_2_test() {
-        let res = second(r#"
-A Y
-B X
-C Z
-        "#.as_bytes()).unwrap();
-        assert_eq!(res, "12");
-    }
 }

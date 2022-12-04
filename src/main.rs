@@ -1,21 +1,15 @@
-use std::fs::File;
-use std::io::{BufReader, Read};
+extern crate core;
+
 use anyhow::{anyhow, Result};
 use clap::Parser;
+use std::fs::File;
+use std::io::Read;
 
 mod aoc2022;
 mod utils;
 
 #[derive(Parser, Debug)]
 struct Args {
-    /// Name of the person to greet
-    #[arg(short, long)]
-    year: String,
-
-    /// Number of times to greet
-    #[arg(short, long)]
-    day: String,
-
     #[arg(short, long)]
     prob: String,
 
@@ -24,29 +18,29 @@ struct Args {
 }
 
 fn main() -> Result<()> {
-    let Args { year, day, prob, test } = Args::parse();
+    let Args { prob, test } = Args::parse();
+    let [y, d, p] = prob_into_parts(&prob)?;
 
-    let mut f = get_input(&year, &day, test)?;
+    let mut f = get_input(&format!("{y}-{d}"), test)?;
 
     let mut s = String::new();
     f.read_to_string(&mut s)?;
 
-    let res = match (year.as_str(), day.as_str(), prob.as_str()) {
-        ("2022", "1", "1") => aoc2022::day1::first(BufReader::new(f)),
-        ("2022", "1", "2") => aoc2022::day1::second(BufReader::new(f)),
-        ("2022", "2", "1") => aoc2022::day2::first(BufReader::new(f)),
-        ("2022", "2", "2") => aoc2022::day2::second(BufReader::new(f)),
-        ("2022", "3", "1") => aoc2022::day3::first(&s),
-        ("2022", "3", "2") => aoc2022::day3::second(&s),
-        _ => Err(anyhow!("not recognized year")),
-    }?;
-
-    println!("{}", res);
+    let res = aoc2022::exec(&format!("{d}-{p}"), &s)?;
+    println!("{res}");
     Ok(())
 }
 
-fn get_input(year: &str, day: &str, test: bool) -> Result<File> {
-    let t_str = if test { "-test" } else {""};
-    let pth = format!("inputs/{year}-{day}{t_str}.txt");
+fn get_input(prob: &str, test: bool) -> Result<File> {
+    let t_str = if test { "-test" } else { "" };
+    let pth = format!("inputs/{prob}{t_str}.txt");
     Ok(File::open(pth)?)
+}
+
+fn prob_into_parts(prob: &str) -> Result<[&str; 3]> {
+    let parts: Vec<_> = prob.split('-').collect();
+    if parts.len() != 3 {
+        return Err(anyhow!("illegal problem def {prob}"));
+    }
+    Ok([parts[0], parts[1], parts[2]])
 }
