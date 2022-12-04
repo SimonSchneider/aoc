@@ -4,7 +4,7 @@ pub mod day2;
 pub mod day3;
 pub mod day4;
 
-fn get_prob(prob: &str) -> impl FnOnce(&str) -> Result<String> {
+pub fn get_prob_func(prob: &str) -> impl FnMut(&str) -> Result<usize> {
     match prob {
         "1-1" => day1::first,
         "1-2" => day1::second,
@@ -19,7 +19,7 @@ fn get_prob(prob: &str) -> impl FnOnce(&str) -> Result<String> {
 }
 
 pub fn exec(prob: &str, inp: &str) -> Result<String> {
-    get_prob(prob)(inp)
+    Ok(get_prob_func(prob)(inp)?.to_string())
 }
 
 #[cfg(test)]

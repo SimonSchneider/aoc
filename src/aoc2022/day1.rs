@@ -20,21 +20,20 @@ impl FromStr for Line<usize> {
     }
 }
 
-pub fn first(inp: &str) -> Result<String> {
+pub fn first(inp: &str) -> Result<usize> {
     find_n_most_cals::<1>(inp)
 }
 
-pub fn second(inp: &str) -> Result<String> {
+pub fn second(inp: &str) -> Result<usize> {
     find_n_most_cals::<3>(inp)
 }
 
-pub fn find_n_most_cals<const N: usize>(inp: &str) -> Result<String> {
-    let res = inp
+pub fn find_n_most_cals<const N: usize>(inp: &str) -> Result<usize> {
+    Ok(inp
         .lines()
         .map(|e| e.trim().parse::<Line<usize>>().unwrap())
         .fold(Agg::<N, usize>::new(), |agg, line| agg.and(line))
-        .result();
-    Ok(format!("{}", res))
+        .result())
 }
 
 struct Agg<const N: usize, T> {

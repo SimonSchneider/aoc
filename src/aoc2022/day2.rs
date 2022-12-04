@@ -11,7 +11,7 @@ enum Outcome {
 }
 
 impl Outcome {
-    fn points(&self) -> u64 {
+    fn points(&self) -> usize {
         match self {
             Win => 6,
             Draw => 3,
@@ -49,7 +49,7 @@ enum Choice {
 }
 
 impl Choice {
-    fn points(&self) -> u64 {
+    fn points(&self) -> usize {
         match self {
             Choice::Rock => 1,
             Choice::Paper => 2,
@@ -83,7 +83,7 @@ struct GameOutcome {
 }
 
 impl Game for GameOutcome {
-    fn points(&self) -> u64 {
+    fn points(&self) -> usize {
         self.elf.opponent_play(&self.outcome.invert()).points() + self.outcome.points()
     }
 }
@@ -94,7 +94,7 @@ struct GameFirst {
 }
 
 impl Game for GameFirst {
-    fn points(&self) -> u64 {
+    fn points(&self) -> usize {
         self.b.points() + self.b.game_outcome(&self.a).points()
     }
 }
@@ -141,20 +141,19 @@ impl FromStr for GameFirst {
 }
 
 pub trait Game {
-    fn points(&self) -> u64;
+    fn points(&self) -> usize;
 }
 
-pub fn second(inp: &str) -> Result<String> {
+pub fn second(inp: &str) -> Result<usize> {
     run::<GameOutcome>(inp)
 }
 
-pub fn first(inp: &str) -> Result<String> {
+pub fn first(inp: &str) -> Result<usize> {
     run::<GameFirst>(inp)
 }
 
-fn run<G: Game + FromStr<Err = anyhow::Error>>(inp: &str) -> Result<String> {
-    let res = non_empty_lines(inp)
+fn run<G: Game + FromStr<Err = anyhow::Error>>(inp: &str) -> Result<usize> {
+    Ok(non_empty_lines(inp)
         .map(|g| G::from_str(g.trim()).unwrap())
-        .fold(0, |sum, e| sum + e.points());
-    Ok(format!("{res}"))
+        .fold(0, |sum, e| sum + e.points()))
 }

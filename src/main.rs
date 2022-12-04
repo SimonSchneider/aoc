@@ -1,12 +1,10 @@
 extern crate core;
 
 use anyhow::{anyhow, Result};
+use aoc::aoc2022;
 use clap::Parser;
 use std::fs::File;
 use std::io::Read;
-
-mod aoc2022;
-mod utils;
 
 #[derive(Parser, Debug)]
 struct Args {

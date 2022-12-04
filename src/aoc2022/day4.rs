@@ -13,15 +13,15 @@ fn any_overlap(a: &[u32; 2], b: &[u32; 2]) -> bool {
     !(a[1] < b[0] || b[1] < a[0])
 }
 
-pub fn first(inp: &str) -> Result<String> {
+pub fn first(inp: &str) -> Result<usize> {
     parse_and_count(inp, contained)
 }
 
-pub fn second(inp: &str) -> Result<String> {
+pub fn second(inp: &str) -> Result<usize> {
     parse_and_count(inp, any_overlap)
 }
 
-fn parse_and_count<F>(inp: &str, mut pred: F) -> Result<String>
+fn parse_and_count<F>(inp: &str, mut pred: F) -> Result<usize>
 where
     F: FnMut(&[u32; 2], &[u32; 2]) -> bool,
 {
@@ -34,5 +34,5 @@ where
         })
         .filter(|[f, s]| pred(f, s))
         .count();
-    Ok(format!("{res}"))
+    Ok(res)
 }

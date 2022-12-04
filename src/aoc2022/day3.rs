@@ -17,16 +17,16 @@ fn str_chars(s: &str) -> u64 {
         .fold(0, |sum, a| sum | a)
 }
 
-pub fn first(inp: &str) -> Result<String> {
+pub fn first(inp: &str) -> Result<usize> {
     let res: u32 = non_empty_lines(inp)
         .map(|l| l.split_at(l.len() / 2))
         .map(|p| [p.0, p.1].map(str_chars))
         .map(|[a, b]| (a & b).trailing_zeros())
         .sum();
-    Ok(format!("{res}"))
+    Ok(res as usize)
 }
 
-pub fn second(inp: &str) -> Result<String> {
+pub fn second(inp: &str) -> Result<usize> {
     let res: u32 = non_empty_lines(inp)
         .map(str_chars)
         .chunks(3)
@@ -34,5 +34,5 @@ pub fn second(inp: &str) -> Result<String> {
         .flat_map(|g| g.reduce(|s, e| s & e))
         .map(|e| e.trailing_zeros())
         .sum();
-    Ok(format!("{res}"))
+    Ok(res as usize)
 }

@@ -5,9 +5,17 @@ edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
+[lib]
+name = "aoc"
+
 [dependencies]
 anyhow = "1.0.66"
 clap = { version = "4.0.27", features = ["derive"] }
 iter_tools = "0.1.4"
 
+[dev-dependencies]
+criterion = {version= "0.4.0", features = ['html_reports'] }
 
+[[bench]]
+name = "aoc_benches"
+harness = false
