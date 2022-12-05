@@ -3,8 +3,9 @@ pub mod day1;
 pub mod day2;
 pub mod day3;
 pub mod day4;
+mod day5;
 
-pub fn get_prob_func(prob: &str) -> impl FnMut(&str) -> Result<usize> {
+pub fn get_prob_func(prob: &str) -> impl FnMut(&str) -> Result<String> {
     match prob {
         "1-1" => day1::first,
         "1-2" => day1::second,
@@ -14,6 +15,8 @@ pub fn get_prob_func(prob: &str) -> impl FnMut(&str) -> Result<usize> {
         "3-2" => day3::second,
         "4-1" => day4::first,
         "4-2" => day4::second,
+        "5-1" => day5::first,
+        "5-2" => day5::second,
         _ => panic!("invalid problem {prob}"),
     }
 }
@@ -113,5 +116,21 @@ CrZsJsPPZsGzwwsLwLmpwMDw
         "#,
         "2",
         "4"
+    );
+
+    aoc_tests!(
+        day5,
+        r#"    [D]    
+[N] [C]    
+[Z] [M] [P]
+ 1   2   3 
+
+move 1 from 2 to 1
+move 3 from 1 to 3
+move 2 from 2 to 1
+move 1 from 1 to 2
+        "#,
+        "CMZ",
+        "MCD"
     );
 }

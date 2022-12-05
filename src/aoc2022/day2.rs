@@ -144,16 +144,17 @@ pub trait Game {
     fn points(&self) -> usize;
 }
 
-pub fn second(inp: &str) -> Result<usize> {
+pub fn second(inp: &str) -> Result<String> {
     run::<GameOutcome>(inp)
 }
 
-pub fn first(inp: &str) -> Result<usize> {
+pub fn first(inp: &str) -> Result<String> {
     run::<GameFirst>(inp)
 }
 
-fn run<G: Game + FromStr<Err = anyhow::Error>>(inp: &str) -> Result<usize> {
+fn run<G: Game + FromStr<Err = anyhow::Error>>(inp: &str) -> Result<String> {
     Ok(non_empty_lines(inp)
         .map(|g| G::from_str(g.trim()).unwrap())
-        .fold(0, |sum, e| sum + e.points()))
+        .fold(0, |sum, e| sum + e.points())
+        .to_string())
 }
