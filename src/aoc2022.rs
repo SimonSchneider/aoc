@@ -4,6 +4,7 @@ pub mod day2;
 pub mod day3;
 pub mod day4;
 mod day5;
+mod day6;
 
 pub fn get_prob_func(prob: &str) -> impl FnMut(&str) -> Result<String> {
     match prob {
@@ -17,6 +18,8 @@ pub fn get_prob_func(prob: &str) -> impl FnMut(&str) -> Result<String> {
         "4-2" => day4::second,
         "5-1" => day5::first,
         "5-2" => day5::second,
+        "6-1" => day6::first,
+        "6-2" => day6::second,
         _ => panic!("invalid problem {prob}"),
     }
 }
@@ -46,11 +49,35 @@ mod test {
                 )
             }
         };
+        ($id: ident, $day: ident, $part:expr, $inp: expr, $res:expr) => {
+            #[test]
+            fn $id() {
+                assert_eq!(
+                    exec(
+                        &format!(
+                            "{}-{}",
+                            stringify!($day).strip_prefix("day").unwrap(),
+                            $part
+                        ),
+                        $inp
+                    )
+                    .unwrap(),
+                    $res
+                )
+            }
+        };
     }
 
     macro_rules! aoc_tests {
         ($day:ident, $inp:expr, $first:expr, $second:expr) => {
             mod $day {
+                use crate::aoc2022::exec;
+                part_n_test! { part1, $day, $inp, $first }
+                part_n_test! { part2, $day, $inp, $second }
+            }
+        };
+        ($spec:ident, $day:ident, $inp:expr, $first:expr, $second:expr) => {
+            mod $spec {
                 use crate::aoc2022::exec;
                 part_n_test! { part1, $day, $inp, $first }
                 part_n_test! { part2, $day, $inp, $second }
@@ -133,4 +160,19 @@ move 1 from 1 to 2
         "CMZ",
         "MCD"
     );
+
+    mod day6 {
+        use crate::aoc2022::exec;
+        part_n_test!(p1a, day6, "1", r#"mjqjpqmgbljsphdztnvjfqwrcgsmlb"#, "7");
+        part_n_test!(p1b, day6, "1", r#"bvwbjplbgvbhsrlpgdmjqwftvncz"#, "5");
+        part_n_test!(p1c, day6, "1", r#"nppdvjthqldpwncqszvftbrmjlhg"#, "6");
+        part_n_test!(p1d, day6, "1", r#"nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg"#, "10");
+        part_n_test!(p1e, day6, "1", r#"zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw"#, "11");
+
+        part_n_test!(p2a, day6, "2", r#"mjqjpqmgbljsphdztnvjfqwrcgsmlb"#, "19");
+        part_n_test!(p2b, day6, "2", r#"bvwbjplbgvbhsrlpgdmjqwftvncz"#, "23");
+        part_n_test!(p2c, day6, "2", r#"nppdvjthqldpwncqszvftbrmjlhg"#, "23");
+        part_n_test!(p2d, day6, "2", r#"nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg"#, "29");
+        part_n_test!(p2e, day6, "2", r#"zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw"#, "26");
+    }
 }
