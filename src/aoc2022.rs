@@ -5,6 +5,7 @@ pub mod day3;
 pub mod day4;
 mod day5;
 mod day6;
+mod day7;
 
 pub fn get_prob_func(prob: &str) -> impl FnMut(&str) -> Result<String> {
     match prob {
@@ -20,6 +21,8 @@ pub fn get_prob_func(prob: &str) -> impl FnMut(&str) -> Result<String> {
         "5-2" => day5::second,
         "6-1" => day6::first,
         "6-2" => day6::second,
+        "7-1" => day7::first,
+        "7-2" => day7::second,
         _ => panic!("invalid problem {prob}"),
     }
 }
@@ -175,4 +178,33 @@ move 1 from 1 to 2
         part_n_test!(p2d, day6, "2", r#"nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg"#, "29");
         part_n_test!(p2e, day6, "2", r#"zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw"#, "26");
     }
+
+    aoc_tests!(
+        day7,
+        r#"$ cd /
+$ ls
+dir a
+14848514 b.txt
+8504156 c.dat
+dir d
+$ cd a
+$ ls
+dir e
+29116 f
+2557 g
+62596 h.lst
+$ cd e
+$ ls
+584 i
+$ cd ..
+$ cd ..
+$ cd d
+$ ls
+4060174 j
+8033020 d.log
+5626152 d.ext
+7214296 k"#,
+        "95437",
+        "24933642"
+    );
 }
