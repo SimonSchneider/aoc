@@ -6,6 +6,7 @@ pub mod day4;
 mod day5;
 mod day6;
 mod day7;
+mod day8;
 
 pub fn get_prob_func(prob: &str) -> impl FnMut(&str) -> Result<String> {
     match prob {
@@ -23,6 +24,8 @@ pub fn get_prob_func(prob: &str) -> impl FnMut(&str) -> Result<String> {
         "6-2" => day6::second,
         "7-1" => day7::first,
         "7-2" => day7::second,
+        "8-1" => day8::first,
+        "8-2" => day8::second,
         _ => panic!("invalid problem {prob}"),
     }
 }
@@ -206,5 +209,16 @@ $ ls
 7214296 k"#,
         "95437",
         "24933642"
+    );
+
+    aoc_tests!(
+        day8,
+        r#"30373
+25512
+65332
+33549
+35390"#,
+        "21",
+        "8"
     );
 }
