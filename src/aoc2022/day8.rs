@@ -1,7 +1,6 @@
-use anyhow::{anyhow, Result};
+use anyhow::Result;
 use iter_tools::Itertools;
-use std::fmt::{format, Display, Formatter};
-use std::iter::FromIterator;
+use std::fmt::{Display, Formatter};
 use std::str::FromStr;
 
 #[derive(Debug)]
@@ -79,7 +78,7 @@ fn iter_flat_mut<T, F>(data: &mut [T], height: usize, width: usize, mapper: F)
 where
     F: Fn(&mut [T]),
 {
-    for (x) in 0..height {
+    for x in 0..height {
         let lb = x * width;
         let ub = (x + 1) * width;
         mapper(&mut data[lb..ub]);
@@ -90,7 +89,7 @@ fn iter_flat_no_sides_mut<T, F>(data: &mut [T], height: usize, width: usize, map
 where
     F: Fn(&mut [T]),
 {
-    for (x) in 1..height - 1 {
+    for x in 1..height - 1 {
         let lb = x * width;
         let ub = (x + 1) * width;
         mapper(&mut data[lb..ub]);
@@ -118,7 +117,7 @@ impl Grid<u8> {
 
 const SET_MASK: u32 = 1 << 7;
 const VALUE_MASK: u32 = !(!0 << 6);
-const SCENE_MASK: u32 = (!0 << 8);
+const SCENE_MASK: u32 = !0 << 8;
 
 fn add_forward_sceneic(v: &mut [u32]) {
     v[1..v.len() - 2]
@@ -137,7 +136,7 @@ fn add_forward_sceneic(v: &mut [u32]) {
         .collect::<Vec<_>>()
         .into_iter()
         .for_each(|(i, c)| {
-            let mut scene = ((v[i] & SCENE_MASK) >> 8);
+            let mut scene = (v[i] & SCENE_MASK) >> 8;
             if scene == 0 {
                 scene = 1;
             }
@@ -150,7 +149,6 @@ impl Grid<u32> {
     fn calc_scores(mut self) -> Self {
         iter_flat_no_sides_mut(&mut self.data, self.rows, self.cols, add_forward_sceneic);
         self.data.reverse();
-        println!("");
         iter_flat_no_sides_mut(&mut self.data, self.rows, self.cols, add_forward_sceneic);
         let mut transposed = vec![0; self.data.len()];
         transpose::transpose(&self.data, &mut transposed, self.cols, self.rows);
