@@ -7,6 +7,7 @@ mod day5;
 mod day6;
 mod day7;
 mod day8;
+mod day9;
 
 pub fn get_prob_func(prob: &str) -> impl FnMut(&str) -> Result<String> {
     match prob {
@@ -26,6 +27,8 @@ pub fn get_prob_func(prob: &str) -> impl FnMut(&str) -> Result<String> {
         "7-2" => day7::second,
         "8-1" => day8::first,
         "8-2" => day8::second,
+        "9-1" => day9::first,
+        "9-2" => day9::second,
         _ => panic!("invalid problem {prob}"),
     }
 }
@@ -220,5 +223,189 @@ $ ls
 35390"#,
         "21",
         "8"
+    );
+
+    aoc_tests!(
+        day9,
+        r#"R 4
+U 4
+L 3
+D 1
+R 4
+D 1
+L 5
+R 2"#,
+        "13",
+        "1"
+    );
+
+    mod day9ext {
+        use crate::aoc2022::exec;
+        part_n_test!(
+            ext,
+            day9,
+            "2",
+            r#"R 5
+U 8
+L 8
+D 3
+R 17
+D 10
+L 25
+U 20"#,
+            "36"
+        );
+    }
+
+    aoc_tests!(
+        day10,
+        r#"addx 15
+addx -11
+addx 6
+addx -3
+addx 5
+addx -1
+addx -8
+addx 13
+addx 4
+noop
+addx -1
+addx 5
+addx -1
+addx 5
+addx -1
+addx 5
+addx -1
+addx 5
+addx -1
+addx -35
+addx 1
+addx 24
+addx -19
+addx 1
+addx 16
+addx -11
+noop
+noop
+addx 21
+addx -15
+noop
+noop
+addx -3
+addx 9
+addx 1
+addx -3
+addx 8
+addx 1
+addx 5
+noop
+noop
+noop
+noop
+noop
+addx -36
+noop
+addx 1
+addx 7
+noop
+noop
+noop
+addx 2
+addx 6
+noop
+noop
+noop
+noop
+noop
+addx 1
+noop
+noop
+addx 7
+addx 1
+noop
+addx -13
+addx 13
+addx 7
+noop
+addx 1
+addx -33
+noop
+noop
+noop
+addx 2
+noop
+noop
+noop
+addx 8
+noop
+addx -1
+addx 2
+addx 1
+noop
+addx 17
+addx -9
+addx 1
+addx 1
+addx -3
+addx 11
+noop
+noop
+addx 1
+noop
+addx 1
+noop
+noop
+addx -13
+addx -19
+addx 1
+addx 3
+addx 26
+addx -30
+addx 12
+addx -1
+addx 3
+addx 1
+noop
+noop
+noop
+addx -9
+addx 18
+addx 1
+addx 2
+noop
+noop
+addx 9
+noop
+noop
+noop
+addx -1
+addx 2
+addx -37
+addx 1
+addx 3
+noop
+addx 15
+addx -21
+addx 22
+addx -6
+addx 1
+noop
+addx 2
+addx 1
+noop
+addx -10
+noop
+noop
+addx 20
+addx 1
+addx 2
+addx 2
+addx -6
+addx -11
+noop
+noop
+noop"#,
+        "13140",
+        "1"
     );
 }
